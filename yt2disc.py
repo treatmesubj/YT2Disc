@@ -4,6 +4,7 @@ from requests_html import HTML
 import re
 import json
 from pprint import pprint
+import win32api
 
 
 if __name__ == "__main__":
@@ -23,7 +24,7 @@ if __name__ == "__main__":
 	except IndexError:
 		link = input("Video-URL: ")
 
-	# request html, locate js
+	# request html, determine title, locate js
 	while True:
 		try:
 			html = HTML(html=requests.get(link).text)
@@ -39,6 +40,8 @@ if __name__ == "__main__":
 	pr_json = config_dict["args"]["player_response"]
 	pr_dict = json.loads(pr_json)
 	sd_dict = pr_dict["streamingData"]
+
+	title = pr_dict['videoDetails']['title']
 	fmts_list = sd_dict["adaptiveFormats"]  # list of fmt_dicts
 
 	# display potential formats
