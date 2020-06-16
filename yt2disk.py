@@ -29,10 +29,10 @@ if __name__ == "__main__":
 		try:
 			html = HTML(html=requests.get(link).text)
 			script = html.find("body div#player div script")[-1].text
-			print("-"*50)
 			break
 		except IndexError:
-			print("something happened, trying again...")
+			print("...")
+			pass
 
 	# extact info from js
 	config_from_re = re.search(r'ytplayer\.config = \{(.+?)\};', script).group(1)
@@ -42,10 +42,12 @@ if __name__ == "__main__":
 	pr_dict = json.loads(pr_json)
 	sd_dict = pr_dict["streamingData"]
 
-	title = pr_dict['videoDetails']['title']
+	title = "".join(x for x in pr_dict['videoDetails']['title'] if x.isalnum())
+	print(title)
 	fmts_list = sd_dict["formats"] + sd_dict["adaptiveFormats"]
 
 	# display potential formats
+	print("-"*50)
 	for fmt_opt, fmt in enumerate(fmts_list):
 		if 'audioQuality' in fmt.keys() and 'video' in fmt['mimeType']:
 			print(f"Format Option [{fmt_opt}]:  (Video & Audio)\n")
