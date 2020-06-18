@@ -42,9 +42,11 @@ if __name__ == "__main__":
 	pr_dict = json.loads(pr_json)
 	sd_dict = pr_dict["streamingData"]
 
-	title = "".join(x for x in pr_dict['videoDetails']['title'] if x.isalnum())
+	# name the file appropriately
+	title = "".join(x for x in pr_dict['videoDetails']['title'].replace(' ', '-') if x.isalnum() or x in ('-', '_'))
 	print(title)
 	fmts_list = sd_dict["formats"] + sd_dict["adaptiveFormats"]
+	print(f"{len(fmts_list)} available formats")
 
 	# display potential formats
 	print("-"*50)
