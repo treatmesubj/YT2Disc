@@ -28,14 +28,13 @@ if __name__ == "__main__":
 	while True:
 		try:
 			html = HTML(html=requests.get(link).text)
-			script = html.find("body div#player div script")[-1].text
 			break
 		except IndexError:
 			print("...")
 			pass
 
 	# extact info from js
-	config_from_re = re.search(r'ytplayer\.config = \{(.+?)\};', script).group(1)
+	config_from_re = re.search(r'ytplayer\.config = \{(.+?)\};', html.text).group(1)
 	config_json = f"{{{config_from_re}}}"
 	config_dict = json.loads(config_json)
 	pr_json = config_dict["args"]["player_response"]
@@ -69,8 +68,8 @@ if __name__ == "__main__":
 
 	# write file to disk
 	file_ext = fmt_choice['mimeType'].split(";")[0].split("/")[1]
-	dir_loc = f"C:\\Users\\{win32api.GetUserName()}\\Desktop"
-	file_path = f"{dir_loc}\\{title}.{file_ext}"
+	# dir_loc = f"C:\\Users\\{win32api.GetUserName()}\\Desktop"
+	file_path = f"{os.getcwd()}\\{title}.{file_ext}"
 	if os.path.exists(file_path):
 		os.remove(file_path)
 	with open(file_path, "wb") as f:
