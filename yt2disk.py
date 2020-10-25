@@ -5,7 +5,6 @@ from requests_html import HTML
 import re
 import json
 from pprint import pprint
-import win32api
 
 
 if __name__ == "__main__":
@@ -24,14 +23,7 @@ if __name__ == "__main__":
 	except IndexError:
 		link = input("Video-URL: ")
 
-	# request html, determine title, locate js
-	while True:
-		try:
-			html = HTML(html=requests.get(link).text)
-			break
-		except IndexError:
-			print("...")
-			pass
+	html = HTML(html=requests.get(link).text)
 
 	# extact info from js
 	config_from_re = re.search(r'ytplayer\.config = \{(.+?)\};', html.text).group(1)
@@ -42,7 +34,7 @@ if __name__ == "__main__":
 	sd_dict = pr_dict["streamingData"]
 
 	# name the file appropriately
-	title = "".join(x for x in pr_dict['videoDetails']['title'].replace(' ', '-') if x.isalnum() or x in ('-', '_'))
+	title = "".join(x for x in pr_dict['videoDetails']['title'].replace(' ', '_') if x.isalnum() or x in ('-', '_'))
 	print(title)
 	fmts_list = sd_dict["formats"] + sd_dict["adaptiveFormats"]
 	print(f"{len(fmts_list)} available formats")
@@ -68,7 +60,6 @@ if __name__ == "__main__":
 
 	# write file to disk
 	file_ext = fmt_choice['mimeType'].split(";")[0].split("/")[1]
-	# dir_loc = f"C:\\Users\\{win32api.GetUserName()}\\Desktop"
 	file_path = f"{os.getcwd()}\\{title}.{file_ext}"
 	if os.path.exists(file_path):
 		os.remove(file_path)
