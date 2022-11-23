@@ -26,15 +26,13 @@ if __name__ == "__main__":
 	html = HTML(html=requests.get(link).text)
 
 	# extact info from js
-	config_from_re = re.search(r'ytplayer\.config = \{(.+?)\};', html.text).group(1)
+	config_from_re = re.search(r'ytInitialPlayerResponse = \{(.+?)\};', html.text).group(1)
 	config_json = f"{{{config_from_re}}}"
 	config_dict = json.loads(config_json)
-	pr_json = config_dict["args"]["player_response"]
-	pr_dict = json.loads(pr_json)
-	sd_dict = pr_dict["streamingData"]
+	sd_dict = config_dict["streamingData"]
 
 	# name the file appropriately
-	title = "".join(x for x in pr_dict['videoDetails']['title'].replace(' ', '_') if x.isalnum() or x in ('-', '_'))
+	title = "".join(x for x in config_dict['videoDetails']['title'].replace(' ', '_') if x.isalnum() or x in ('-', '_'))
 	print(title)
 	fmts_list = sd_dict["formats"] + sd_dict["adaptiveFormats"]
 	print(f"{len(fmts_list)} available formats")
