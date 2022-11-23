@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
 	# write file to disk
 	file_ext = fmt_choice['mimeType'].split(";")[0].split("/")[1]
-	file_path = f"{os.getcwd()}\\{title}.{file_ext}"
+	file_path = os.path.join(os.getcwd(), f"{title}.{file_ext}")
 	if os.path.exists(file_path):
 		os.remove(file_path)
 	with open(file_path, "wb") as f:
